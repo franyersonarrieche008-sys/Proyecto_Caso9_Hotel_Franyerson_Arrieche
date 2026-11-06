@@ -5,11 +5,11 @@ from django.db import models
 class Reserva(models.Model):
     nombre_huesped = models.CharField(
         max_length=100,
-        verbose_name='Nombre del huésped',
+        verbose_name='Nombre del(la) huésped',
     )
     numero_habitacion = models.PositiveIntegerField(
         validators=[MinValueValidator(1)],
-        verbose_name='Número de habitación',
+        verbose_name='Número de la habitación',
     )
     noches = models.PositiveIntegerField(
         default=1,
