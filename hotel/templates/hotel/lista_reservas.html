@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consulta las reservas del hotel y su estado de confirmación.">
+    <title>Reservas | Hotel Franyerson</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #172b3a;
+            --muted: #647887;
+            --brand: #126b65;
+            --brand-dark: #0c504b;
+            --surface: #ffffff;
+            --background: #f2f6f5;
+            --line: #e1e9e7;
+            --success: #176b48;
+            --success-bg: #e3f4eb;
+            --pending: #8a5a08;
+            --pending-bg: #fff1d2;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--ink);
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .hero {
+            padding: 48px max(24px, calc((100% - 1080px) / 2));
+            background: linear-gradient(120deg, var(--brand-dark), #16877b);
+            color: white;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: #b7e5d9;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); }
+        .hero p:last-child { margin: 10px 0 0; color: #e0f2ed; }
+
+        main {
+            width: min(1080px, calc(100% - 40px));
+            margin: 28px auto 56px;
+        }
+
+        .summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .summary h2 { margin: 0; font-size: 1.25rem; }
+
+        .count {
+            padding: 8px 14px;
+            border: 1px solid #cce4dc;
+            border-radius: 999px;
+            background: #e8f5f0;
+            color: var(--brand-dark);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .table-wrap {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--surface);
+            box-shadow: 0 8px 28px rgb(23 43 58 / 6%);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 16px 20px; border-bottom: 1px solid var(--line); }
+        th {
+            background: #f8fbfa;
+            color: var(--muted);
+            font-size: 0.76rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        tbody tr:last-child td { border-bottom: 0; }
+        tbody tr:hover { background: #fbfdfc; }
+        .guest { font-weight: 650; }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .status-confirmed { background: var(--success-bg); color: var(--success); }
+        .status-pending { background: var(--pending-bg); color: var(--pending); }
+        .empty {
+            padding: 42px 24px;
+            color: var(--muted);
+            text-align: center;
+        }
+        footer {
+            padding: 0 20px 24px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .hero { padding: 36px 22px; }
+            main { width: min(100% - 24px, 1080px); margin-top: 20px; }
+            th, td { padding: 13px 10px; }
+            th { font-size: 0.66rem; }
+            td { font-size: 0.9rem; }
+            .summary { align-items: flex-start; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <p class="eyebrow">Hotel Franyerson · Gestión de alojamiento</p>
+        <h1>Reservas</h1>
+        <p>Consulta los huéspedes, sus habitaciones y el estado de cada reserva.</p>
+    </header>
+
+    <main>
+        <section aria-labelledby="listado-titulo">
+            <div class="summary">
+                <h2 id="listado-titulo">Listado de reservas</h2>
+                <span class="count">Total: {{ total_reservas }}</span>
+            </div>
+
+            {% if reservas %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Huésped</th>
+                                <th scope="col">Habitación</th>
+                                <th scope="col">Noches</th>
+                                <th scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reserva in reservas %}
+                                <tr>
+                                    <td class="guest">{{ reserva.nombre_huesped }}</td>
+                                    <td>Habitación {{ reserva.numero_habitacion }}</td>
+                                    <td>{{ reserva.noches }}</td>
+                                    <td>
+                                        {% if reserva.confirmada %}
+                                            <span class="status status-confirmed">Confirmada</span>
+                                        {% else %}
+                                            <span class="status status-pending">Pendiente</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="table-wrap empty">
+                    <p>Aún no hay reservas registradas</p>
+                    <p>Agrega reservas desde el panel de administración.</p>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>Sistema de Gestión de Reservas · Caso 9</footer>
+</body>
+</html>
